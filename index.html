@@ -1,0 +1,63 @@
+<!--Author(A)s: Juan Jose Sanchez
+    Date of creation: 16-02-2023
+    Last modification: 23-03-2023-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parchis</title>
+    <!-- etiqueta fav-icon -->
+    <link rel="stylesheet" href="./src/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="./src/libs/three.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+
+    <script src="./src/vendors/three.js-master/build/three.min.js"></script>
+    <!-- Loader GLTF, OBJ Y MTL-->
+    <script src="./src/vendors/load/DRACOLoader.js"></script>
+    <script src="./src/vendors/load/GLTFLoader.js"></script>
+    <script src="./src/vendors/load/MTLLoader.js"></script>
+    <script src="./src/vendors/load/OBJLoader.js"></script>
+
+    <script src="./src/libs/OrbitControls.js"></script> <!-- interacciones con el mouse -->
+    <script src="./src/js/main.js"></script>
+    
+</head>
+<body onload="start3dService()">
+    <canvas width="800" height="600" class="webgl"></canvas>
+    <nav class="navbar bg-light">
+        <div class="container">
+            <!-- <a class="navbar-brand" href="#">
+                
+            </a> -->
+
+            <ul class="nav justify-content-end">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">Encender Luces</a>
+                    <ul class="dropdown-menu">
+                        <li><a onclick="createLight('AmbientLight')">AmbientLight</a></li>
+                        <li><a onclick="createLight('DirectionalLight')">DirectionalLight</a></li>
+                        <li><a onclick="createLight('PointLight')">PointLight</a></li>
+                        <li><a onclick="createLight('SpotLight')">SpotLight</a></li>
+                        <li><a onclick="createLight('SpotLightShadow')">SpotLightShadow</a></li>
+                        <li><a onclick="createLight('HemisphereLight')">HemisphereLight</a></li>
+                        <li><a onclick="createLight('RectAreaLight')">RectAreaLight</a></li>
+                    </ul>
+                </li>
+                
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- JS bootstrap-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+        crossorigin="anonymous"></script>
+</body>
+</html>

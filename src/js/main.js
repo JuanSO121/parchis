@@ -1,185 +1,251 @@
-/*
-	Phantom by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
-*/
+// Principales variables son:
 
-(function($) {
+var scene = null, //place
+    camera = null, //to see
+    renderer = null, //to represent
+    myCanvas = null, //to draw
+    controls = null, //to move
+    
+    cube = null,
+    cone = null,
+    cylinder = null;   
 
-	var	$window = $(window),
-		$body = $('body');
+function start3dService() {
+    initScene();        // To inicializate the project
+    createDashboard();
+    animate();          // To represent frame by frame (Update)...
+    window.addEventListener('resize', onWindowResize, false);
 
-	// Breakpoints.
-		breakpoints({
-			xlarge:   [ '1281px',  '1680px' ],
-			large:    [ '981px',   '1280px' ],
-			medium:   [ '737px',   '980px'  ],
-			small:    [ '481px',   '736px'  ],
-			xsmall:   [ '361px',   '480px'  ],
-			xxsmall:  [ null,      '360px'  ]
-		});
+    createGLTF();
+    createObjMtl();
+}
 
-	// Play initial animations on page load.
-		$window.on('load', function() {
-			window.setTimeout(function() {
-				$body.removeClass('is-preload');
-			}, 100);
-		});
+function initScene() {
+    scene = new THREE.Scene();
+    scene.background=new THREE.Color(012075);
+    camera = new THREE.PerspectiveCamera( 75,   // FOV (Fild of view)
+                                        window.innerWidth / window.innerHeight, // ASPECT (Size of Screen)
+                                        0.1,  // NEAR (Cerca)
+                                        1000 ); //FAR (lejos)
 
-	// Touch?
-		if (browser.mobile)
-			$body.addClass('is-touch');
+    myCanvas = document.querySelector('.webgl'); 
+    renderer = new THREE.WebGLRenderer({canvas: myCanvas});
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild( renderer.domElement );
 
-	// Forms.
-		var $form = $('form');
+    scene.add(camera);
+    //make controls
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    camera.position.set(10, 15, 10);
+    controls.update();
 
-		// Auto-resizing textareas.
-			$form.find('textarea').each(function() {
+    // Create Grid
+    const size = 30;
+    const divisions = 30;
 
-				var $this = $(this),
-					$wrapper = $('<div class="textarea-wrapper"></div>'),
-					$submits = $this.find('input[type="submit"]');
+    const gridHelper = new THREE.GridHelper(size, 
+                                            divisions,
+                                            0x000, //color cruz
+                                            0xffffff);
+    scene.add( gridHelper );
 
-				$this
-					.wrap($wrapper)
-					.attr('rows', 1)
-					.css('overflow', 'hidden')
-					.css('resize', 'none')
-					.on('keydown', function(event) {
+    //axes helper
+    const axesHelper = new THREE.AxesHelper(5);
+    scene.add( axesHelper );
+    createLight('AmbientLight');
+}
 
-						if (event.keyCode == 13
-						&&	event.ctrlKey) {
 
-							event.preventDefault();
-							event.stopPropagation();
+function createDashboard(){
+ const geometry = new THREE.PlaneGeometry( 30, 30 );
+ const loader = new THREE.TextureLoader();
+ 
+ const material = new THREE.MeshBasicMaterial( {color: 0xffffff,
+    map: loader.load('./src/img/textura_parchis.jpg'),
+    side: THREE.DoubleSide} );
+ const plane = new THREE.Mesh( geometry, material );
+ plane.rotation.x= Math.PI/2;
+ scene.add( plane );
+}
 
-							$(this).blur();
+function createGLTF() {
+    const loader = new THREE.GLTFLoader();
 
-						}
+    const dracoLoader = new THREE.DRACOLoader();
+        dracoLoader.setDecoderPath( '../src/models/GLTF/pato/' );
+        loader.setDRACOLoader( dracoLoader );
 
-					})
-					.on('blur focus', function() {
-						$this.val($.trim($this.val()));
-					})
-					.on('input blur focus --init', function() {
+    // Load a glTF resource
+    loader.load(
+        // resource URL
+        '../src/models/gltf/pato/duck.gltf',
+        // called when the resource is loaded
+        function ( gltf ) {
 
-						$wrapper
-							.css('height', $this.height());
+            scene.add( gltf.scene );
 
-						$this
-							.css('height', 'auto')
-							.css('height', $this.prop('scrollHeight') + 'px');
+            gltf.animations; // Array<THREE.AnimationClip>
+            gltf.scene; // THREE.Group
+            gltf.scenes; // Array<THREE.Group>
+            gltf.cameras; // Array<THREE.Camera>
+            gltf.asset; // Object
 
-					})
-					.on('keyup', function(event) {
+            (gltf.scene).position.set(-10,0,-10);
+            (gltf.scene).scale.set(3,3,3);
+        },
+        // called while loading is progressing
+        function ( xhr ) {
 
-						if (event.keyCode == 9)
-							$this
-								.select();
+            console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
 
-					})
-					.triggerHandler('--init');
+        },
+        // called when loading has errors
+        function ( error ) {
 
-				// Fix.
-					if (browser.name == 'ie'
-					||	browser.mobile)
-						$this
-							.css('max-height', '10em')
-							.css('overflow-y', 'auto');
+            console.log( 'An error happened' );
 
-			});
+        }
+    );
+}
 
-	// Menu.
-		var $menu = $('#menu');
+function createObjMtl(){
+    const loader = new THREE.OBJLoader();
+    const mtlLoader = new THREE.MTLLoader();
 
-		$menu.wrapInner('<div class="inner"></div>');
+    mtlLoader.setTexturePath('../src/models/OBJMTL/Griffin/');
+    mtlLoader.setPath('../src/models/OBJMTL/Griffin/');
+    mtlLoader.load('grifo.mtl', function (materials) {
 
-		$menu._locked = false;
+        materials.preload();
 
-		$menu._lock = function() {
+        loader.setMaterials(materials);
+        loader.setPath('../src/models/OBJMTL/Griffin/');
+        loader.load('grifo.obj', function (object) {
+              scene.add(object);
+              object.scale.set(2,2,2);
+              object.position.set(10,0,-10);
+              object.rotation.y=90;
+        });
+    }); 
+}
 
-			if ($menu._locked)
-				return false;
 
-			$menu._locked = true;
+function getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) ) + min;
+}
 
-			window.setTimeout(function() {
-				$menu._locked = false;
-			}, 350);
 
-			return true;
+function createLight(typeLight) {
+    switch(typeLight) {
+        case 'AmbientLight':
+            const AmbientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
+            scene.add( AmbientLight );
+          break;
+        case 'DirectionalLight':
+            // White directional light at half intensity shining from the top.
+            const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+            scene.add( directionalLight );
+          break;
+        case 'PointLight':
+            const PointLight = new THREE.PointLight( 0xffffff, 1, 100 );
+            PointLight.position.set( 0, 3, 0 );
+            scene.add( PointLight );
 
-		};
+            const sphereSize = 1;
+            const pointLightHelper = new THREE.PointLightHelper( PointLight, sphereSize );
+            scene.add( pointLightHelper );
+          break;
+          
+        case 'SpotLight': // pending
+        const spotLight = new THREE.SpotLight( 0xffffff );
+        spotLight.position.set( 10, 10, 10 );
+        scene.add( spotLight );
 
-		$menu._show = function() {
+        const spotLightHelper = new THREE.SpotLightHelper( spotLight );
+        scene.add( spotLightHelper );
+          break;
 
-			if ($menu._lock())
-				$body.addClass('is-menu-visible');
+        case 'SpotLightShadow':
+            const renderer = new THREE.WebGLRenderer();
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
 
-		};
+            //Create a SpotLight and turn on shadows for the light
+            const light = new THREE.SpotLight( 0xffffff );
+            light.castShadow = true; // default false
+            scene.add( light );
 
-		$menu._hide = function() {
+            //Set up shadow properties for the light
+            light.shadow.mapSize.width = 512; // default
+            light.shadow.mapSize.height = 512; // default
+            light.shadow.camera.near = 0.5; // default
+            light.shadow.camera.far = 500; // default
+            light.shadow.focus = 1; // default
+            const helper = new THREE.CameraHelper( light.shadow.camera );
+            scene.add( helper );
 
-			if ($menu._lock())
-				$body.removeClass('is-menu-visible');
+            break;
 
-		};
+            case 'HemisphereLight':
+                const HemisphereLight = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+                scene.add( HemisphereLight );
+            break;
 
-		$menu._toggle = function() {
+            case 'RectAreaLight':
+                const width = 10;
+                const height = 10;
+                const intensity = 1;
+                const rectLight = new THREE.RectAreaLight( 0xffffff, intensity,  width, height );
+                rectLight.position.set( 5, 5, 0 );
+                rectLight.lookAt( 0, 0, 0 );
+                scene.add( rectLight )
 
-			if ($menu._lock())
-				$body.toggleClass('is-menu-visible');
+                const rectLightHelper = new RectAreaLightHelper( rectLight );
+                rectLight.add( rectLightHelper );
+            break;
+      }
+      
+}
 
-		};
+function createGeometries() {
+    camera.position.z = 5;
+}
 
-		$menu
-			.appendTo($body)
-			.on('click', function(event) {
-				event.stopPropagation();
-			})
-			.on('click', 'a', function(event) {
+function animate() {
+    controls.update();
+	requestAnimationFrame( animate );
 
-				var href = $(this).attr('href');
+    // cube.rotation.x += 0.01;
+    // cube.rotation.y += 0.01;
 
-				event.preventDefault();
-				event.stopPropagation();
+    // sphere.rotation.x += 0.02; // Rotar la esfera más rápido que el cubo
+    // sphere.rotation.y += 0.02;
 
-				// Hide.
-					$menu._hide();
+    //cada uno de los objetos que estan siendo recorridos
+    // scene.traverse(function (object) {
+    // if (object.isMesh ===true) {
+    // object.rotation.x += 0.01;
+    //  object.rotation.y += 0.01;
+    // }
+    // });
+	renderer.render( scene, camera );
+}
 
-				// Redirect.
-					if (href == '#menu')
-						return;
+function onWindowResize(){
 
-					window.setTimeout(function() {
-						window.location.href = href;
-					}, 350);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
 
-			})
-			.append('<a class="close" href="#menu">Close</a>');
+    renderer.setSize( window.innerWidth, window.innerHeight );
+}
 
-		$body
-			.on('click', 'a[href="#menu"]', function(event) {
+function openForm() {
+    document.getElementById("myForm").style.display = "block";
+}
 
-				event.stopPropagation();
-				event.preventDefault();
+function closeForm() {
+    document.getElementById("myForm").style.display = "none";
+}
 
-				// Toggle.
-					$menu._toggle();
 
-			})
-			.on('click', function(event) {
-
-				// Hide.
-					$menu._hide();
-
-			})
-			.on('keydown', function(event) {
-
-				// Hide on escape.
-					if (event.keyCode == 27)
-						$menu._hide();
-
-			});
-
-})(jQuery);
+console.log(THREE);
