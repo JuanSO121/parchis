@@ -122,11 +122,47 @@ function createObjMtl(){
         loader.setPath('../src/models/OBJMTL/Griffin/');
         loader.load('grifo.obj', function (object) {
               scene.add(object);
-              object.scale.set(2,2,2);
+              object.scale.set(2.5,2.5,2.5);
               object.position.set(10,0,-10);
               object.rotation.y=90;
         });
     }); 
+
+    mtlLoader.setTexturePath('../src/models/OBJMTL/Fenix/');
+    mtlLoader.setPath('../src/models/OBJMTL/Fenix/');
+    mtlLoader.load('fenix.mtl', function (materials) {
+
+        materials.preload();
+
+        loader.setMaterials(materials);
+        loader.setPath('../src/models/OBJMTL/Fenix/');
+        loader.load('fenix.obj', function (object) {
+              scene.add(object);
+              object.scale.set(2.5,2.5,2.5);
+              object.position.set(10,0,10);
+              object.rotation.y=9;
+        });
+    });  
+    
+    // reemplazar esta
+    // mtlLoader.setTexturePath('../src/models/OBJMTL/rick/');
+    // mtlLoader.setPath('../src/models/OBJMTL/rick/');
+    // mtlLoader.load('rickSanchez.mtl', function (materials2) {
+
+    //     materials2.preload();
+
+    //     loader.setMaterials(materials2);
+    //     loader.setPath('../src/models/OBJMTL/rick/');
+    //     loader.load('rickSanchez.obj', function (object) {
+    //           scene.add(object);
+    //           object.scale.set(2,2,2);
+    //           object.position.set(-10,0,10);
+    //           object.rotation.y=7;
+    //     });
+    // });  
+    
+    
+    
 }
 
 
