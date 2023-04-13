@@ -61,7 +61,7 @@ function createDashboard(){
  const loader = new THREE.TextureLoader();
  
  const material = new THREE.MeshBasicMaterial( {color: 0xffffff,
-    map: loader.load('./src/img/textura_parchis.jpg'),
+    map: loader.load('./src/img/textura_parchis.jpeg'),
     side: THREE.DoubleSide} );
  const plane = new THREE.Mesh( geometry, material );
  plane.rotation.x= Math.PI/2;
@@ -123,8 +123,9 @@ function createObjMtl(){
         loader.load('grifo.obj', function (object) {
               scene.add(object);
               object.scale.set(2.5,2.5,2.5);
-              object.position.set(10,0,-10);
-              object.rotation.y=90;
+              object.position.set(10,0,10);
+              object.rotation.y=7;
+              
         });
     }); 
 
@@ -139,8 +140,8 @@ function createObjMtl(){
         loader.load('fenix.obj', function (object) {
               scene.add(object);
               object.scale.set(2.5,2.5,2.5);
-              object.position.set(10,0,10);
-              object.rotation.y=9;
+              object.position.set(10,0,-10);
+              object.rotation.y=5;
         });
     });  
     
