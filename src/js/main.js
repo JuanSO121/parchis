@@ -76,36 +76,36 @@ function createGLTF() {
         loader.setDRACOLoader( dracoLoader );
 
     // Load a glTF resource
-    loader.load(
-        // resource URL
-        '../src/models/gltf/pato/duck.gltf',
-        // called when the resource is loaded
-        function ( gltf ) {
+    // loader.load(
+    //     // resource URL
+    //     '../src/models/gltf/pato/duck.gltf',
+    //     // called when the resource is loaded
+    //     function ( gltf ) {
 
-            scene.add( gltf.scene );
+    //         scene.add( gltf.scene );
 
-            gltf.animations; // Array<THREE.AnimationClip>
-            gltf.scene; // THREE.Group
-            gltf.scenes; // Array<THREE.Group>
-            gltf.cameras; // Array<THREE.Camera>
-            gltf.asset; // Object
+    //         gltf.animations; // Array<THREE.AnimationClip>
+    //         gltf.scene; // THREE.Group
+    //         gltf.scenes; // Array<THREE.Group>
+    //         gltf.cameras; // Array<THREE.Camera>
+    //         gltf.asset; // Object
 
-            (gltf.scene).position.set(-10,0,-10);
-            (gltf.scene).scale.set(3,3,3);
-        },
-        // called while loading is progressing
-        function ( xhr ) {
+    //         (gltf.scene).position.set(-10,0,-10);
+    //         (gltf.scene).scale.set(3,3,3);
+    //     },
+    //     // called while loading is progressing
+    //     function ( xhr ) {
 
-            console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+    //         console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
 
-        },
-        // called when loading has errors
-        function ( error ) {
+    //     },
+    //     // called when loading has errors
+    //     function ( error ) {
 
-            console.log( 'An error happened' );
+    //         console.log( 'An error happened' );
 
-        }
-    );
+    //     }
+    // );
 }
 
 function createObjMtl(){
@@ -146,22 +146,38 @@ function createObjMtl(){
     });  
     
     // reemplazar esta
-    // mtlLoader.setTexturePath('../src/models/OBJMTL/rick/');
-    // mtlLoader.setPath('../src/models/OBJMTL/rick/');
-    // mtlLoader.load('rickSanchez.mtl', function (materials2) {
+    mtlLoader.setTexturePath('../src/models/OBJMTL/Unicornio/');
+    mtlLoader.setPath('../src/models/OBJMTL/Unicornio/');
+    mtlLoader.load('unicornio.mtl', function (materials2) {
 
-    //     materials2.preload();
+        materials2.preload();
 
-    //     loader.setMaterials(materials2);
-    //     loader.setPath('../src/models/OBJMTL/rick/');
-    //     loader.load('rickSanchez.obj', function (object) {
-    //           scene.add(object);
-    //           object.scale.set(2,2,2);
-    //           object.position.set(-10,0,10);
-    //           object.rotation.y=7;
-    //     });
-    // });  
+        loader.setMaterials(materials2);
+        loader.setPath('../src/models/OBJMTL/Unicornio/');
+        loader.load('unicornio.obj', function (object) {
+              scene.add(object);
+              object.scale.set(2.5,2.5,2.5);
+              object.position.set(-10,0,10);
+              object.rotation.y=-7;
+        });
+    });  
     
+        // reemplazar esta
+        mtlLoader.setTexturePath('../src/models/OBJMTL/Elfa/');
+        mtlLoader.setPath('../src/models/OBJMTL/Elfa/');
+        mtlLoader.load('elfa.mtl', function (materials2) {
+    
+            materials2.preload();
+    
+            loader.setMaterials(materials2);
+            loader.setPath('../src/models/OBJMTL/Elfa/');
+            loader.load('elfa.obj', function (object) {
+                  scene.add(object);
+                  object.scale.set(4.2,4.2,4.2);
+                  object.position.set(-10,0,-10);
+                  object.rotation.y=7;
+            });
+        });  
     
     
 }
