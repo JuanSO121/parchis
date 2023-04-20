@@ -10,6 +10,7 @@
     <title>Parchis</title>
     <!-- etiqueta fav-icon -->
     <link rel="stylesheet" href="./src/css/main.css">
+    <link rel="stylesheet" href="./src/css/dices.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="./src/libs/three.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -27,6 +28,10 @@
     
 </head>
 <body onload="start3dService()">
+    <audio id="myBackgroundSound">
+        <source src="./src/sounds/Hallownest.mp3" type="audio/mpeg">
+    </audio>
+    
     <canvas width="800" height="600" class="webgl"></canvas>
     <nav class="navbar bg-light">
         <div class="container">
@@ -48,12 +53,22 @@
                         <li><a onclick="createLight('RectAreaLight')">RectAreaLight</a></li>
                     </ul>
                 </li>
-                
+                    <div display="right">
+                        <a aria-expanded="false">Timer: </a>
+                        <a id= "minutes" aria-expanded="false"> : </a>
+                        <a id= "seconds" aria-expanded="false"></a>
+                    </div>   
                     </ul>
                 </li>
             </ul>
         </div>
     </nav>
+
+    <div class="dicesBottom">
+        <figure onclick="throwDices()">
+            <img class="build" src="./src/img/Dados.png" alt="Tirar Dados">
+        </figure>
+    </div>
 
     <!-- JS bootstrap-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
