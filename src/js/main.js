@@ -1,3 +1,4 @@
+// import * as dat from 'dat.gui';
 // Principales variables son:
 
 var scene = null, //place
@@ -10,14 +11,40 @@ var scene = null, //place
     cone = null,
     cylinder = null;   
 
+var dados = [],
+    rotate = false,
+    jugador = 'red',
+    posPlayers = [{ x: 17.298156763549287, y: 17.59827012753881, z: 0.10151787289657402},  // Red
+                    { x: -17.03050250551709, y: 16.04258871995021, z: -0.6035724405441485},  // Yellow
+                    { x: -0.024321219262030, y: 15.91870264199188, z: 18.7967995615866},     // Blue
+                    { x: -0.066898867944208, y: 17.59827012753881, z: -17.234319602002646}]; // Green
 function start3dService() {
     initScene();        // To inicializate the project
     createDashboard();
     animate();          // To represent frame by frame (Update)...
     window.addEventListener('resize', onWindowResize, false);
 
-    createGLTF();
-    createObjMtl();
+    // createGLTF();
+    // createObjMtl(routeFolder,nameArchive,posx,posy,posz,scale,rotation)
+
+    //dados
+    createObjMtl('./src/models/OBJMTL/Dice/','dice',-2,0,0, 1,0);
+    createObjMtl('./src/models/OBJMTL/Dice/','dice',2,0,0, 1,0);
+
+    createObjMtl('./src/models/OBJMTL/Griffin/','grifo',10,0,10, 2,7);
+
+    createObjMtl('./src/models/OBJMTL/Elfa/','elfa',-10,0,-10,4.2,7);
+
+    createObjMtl('./src/models/OBJMTL/Fenix/','fenix',10,0,-10, 2.5,5);
+
+    createObjMtl('./src/models/OBJMTL/Unicornio/','unicornio',-10,0,10, 2.5,-7);
+
+    createLight('DirectionalLight');
+    
+
+    
+
+    initialiseTimer();
 }
 
 function initScene() {
@@ -68,120 +95,26 @@ function createDashboard(){
  scene.add( plane );
 }
 
-function createGLTF() {
-    const loader = new THREE.GLTFLoader();
-
-    const dracoLoader = new THREE.DRACOLoader();
-        dracoLoader.setDecoderPath( '../src/models/GLTF/pato/' );
-        loader.setDRACOLoader( dracoLoader );
-
-    // Load a glTF resource
-    // loader.load(
-    //     // resource URL
-    //     '../src/models/gltf/pato/duck.gltf',
-    //     // called when the resource is loaded
-    //     function ( gltf ) {
-
-    //         scene.add( gltf.scene );
-
-    //         gltf.animations; // Array<THREE.AnimationClip>
-    //         gltf.scene; // THREE.Group
-    //         gltf.scenes; // Array<THREE.Group>
-    //         gltf.cameras; // Array<THREE.Camera>
-    //         gltf.asset; // Object
-
-    //         (gltf.scene).position.set(-10,0,-10);
-    //         (gltf.scene).scale.set(3,3,3);
-    //     },
-    //     // called while loading is progressing
-    //     function ( xhr ) {
-
-    //         console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-
-    //     },
-    //     // called when loading has errors
-    //     function ( error ) {
-
-    //         console.log( 'An error happened' );
-
-    //     }
-    // );
-}
-
-function createObjMtl(){
+function createObjMtl(routeFolder, nameArchive, posx, posy, posz, scale,rotation){
     const loader = new THREE.OBJLoader();
     const mtlLoader = new THREE.MTLLoader();
 
-    mtlLoader.setTexturePath('../src/models/OBJMTL/Griffin/');
-    mtlLoader.setPath('../src/models/OBJMTL/Griffin/');
-    mtlLoader.load('grifo.mtl', function (materials) {
+    mtlLoader.setTexturePath(routeFolder);
+    mtlLoader.setPath(routeFolder);
+    mtlLoader.load(nameArchive+'.mtl', function (materials) {
 
         materials.preload();
 
         loader.setMaterials(materials);
-        loader.setPath('../src/models/OBJMTL/Griffin/');
-        loader.load('grifo.obj', function (object) {
+        loader.setPath(routeFolder);
+        loader.load(nameArchive+'.obj', function (object) {
               scene.add(object);
-              object.scale.set(2.5,2.5,2.5);
-              object.position.set(10,0,10);
-              object.rotation.y=7;
-              
+              object.scale.set(scale,scale,scale);
+              object.position.set(posx,posy,posz);
+              object.rotation.y=rotation;
         });
     }); 
-
-    mtlLoader.setTexturePath('../src/models/OBJMTL/Fenix/');
-    mtlLoader.setPath('../src/models/OBJMTL/Fenix/');
-    mtlLoader.load('fenix.mtl', function (materials) {
-
-        materials.preload();
-
-        loader.setMaterials(materials);
-        loader.setPath('../src/models/OBJMTL/Fenix/');
-        loader.load('fenix.obj', function (object) {
-              scene.add(object);
-              object.scale.set(2.5,2.5,2.5);
-              object.position.set(10,0,-10);
-              object.rotation.y=5;
-        });
-    });  
-    
-    // reemplazar esta
-    mtlLoader.setTexturePath('../src/models/OBJMTL/Unicornio/');
-    mtlLoader.setPath('../src/models/OBJMTL/Unicornio/');
-    mtlLoader.load('unicornio.mtl', function (materials2) {
-
-        materials2.preload();
-
-        loader.setMaterials(materials2);
-        loader.setPath('../src/models/OBJMTL/Unicornio/');
-        loader.load('unicornio.obj', function (object) {
-              scene.add(object);
-              object.scale.set(2.5,2.5,2.5);
-              object.position.set(-10,0,10);
-              object.rotation.y=-7;
-        });
-    });  
-    
-        // reemplazar esta
-        mtlLoader.setTexturePath('../src/models/OBJMTL/Elfa/');
-        mtlLoader.setPath('../src/models/OBJMTL/Elfa/');
-        mtlLoader.load('elfa.mtl', function (materials2) {
-    
-            materials2.preload();
-    
-            loader.setMaterials(materials2);
-            loader.setPath('../src/models/OBJMTL/Elfa/');
-            loader.load('elfa.obj', function (object) {
-                  scene.add(object);
-                  object.scale.set(4.2,4.2,4.2);
-                  object.position.set(-10,0,-10);
-                  object.rotation.y=7;
-            });
-        });  
-    
-    
 }
-
 
 function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1) ) + min;
@@ -193,6 +126,7 @@ function createLight(typeLight) {
         case 'AmbientLight':
             const AmbientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
             scene.add( AmbientLight );
+            
           break;
         case 'DirectionalLight':
             // White directional light at half intensity shining from the top.
@@ -265,23 +199,19 @@ function createGeometries() {
 }
 
 function animate() {
+    requestAnimationFrame(animate);
     controls.update();
-	requestAnimationFrame( animate );
-
-    // cube.rotation.x += 0.01;
-    // cube.rotation.y += 0.01;
-
-    // sphere.rotation.x += 0.02; // Rotar la esfera más rápido que el cubo
-    // sphere.rotation.y += 0.02;
-
-    //cada uno de los objetos que estan siendo recorridos
-    // scene.traverse(function (object) {
-    // if (object.isMesh ===true) {
-    // object.rotation.x += 0.01;
-    //  object.rotation.y += 0.01;
-    // }
-    // });
-	renderer.render( scene, camera );
+    
+    renderer.render(scene, camera);
+    
+    if(rotate==true){
+        dados[0].rotation.x -= SPEED * 2;
+        dados[0].rotation.y -= SPEED;
+        dados[0].rotation.z -= SPEED * 3;
+        dados[1].rotation.x -= SPEED * 1;
+        dados[1].rotation.y -= SPEED;
+        dados[1].rotation.z -= SPEED * 2;
+    }
 }
 
 function onWindowResize(){
@@ -300,5 +230,49 @@ function closeForm() {
     document.getElementById("myForm").style.display = "none";
 }
 
+function playSounds(whatSound){
+    switch(whatSound){
+
+        case 'hollow':
+            document.getElementById("myBackgroundSound").play();
+            break;
+       
+
+        case 'background':
+            document.getElementById("myBackgroundSound").play();
+            break;
+
+    }   
+}
+
+function go2Play() {
+    document.getElementById('blocker').style.display = 'none';
+    // document.getElementById('cointainerOthers').style.display = 'block';
+    playSounds('hollow');
+    initialiseTimer();
+  }
+  
+function initialiseTimer() {
+    var sec = 0;
+    function pad(val) { return val > 9 ? val : "0" + val; }
+  
+    setInterval(function () {
+      document.getElementById("seconds").innerHTML = String(pad(++sec % 60));
+      document.getElementById("minutes").innerHTML = String(pad(parseInt(sec / 60, 10)));
+    }, 1000);
+  }
+
+var SPEED = 0.03;
+function throwDices(caseMovement) {
+    switch (caseMovement) {
+        case 'rotate':
+            rotate = true;
+        break;
+    
+        case 'stop':
+            rotate = false;
+        break;
+    }
+}
 
 console.log(THREE);
