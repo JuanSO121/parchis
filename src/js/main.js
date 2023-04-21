@@ -13,23 +13,18 @@ var scene = null, //place
 
 var dados = [],
     rotate = false,
-    jugador = 'red',
+    jugador='blue',
     posPlayers = [{ x: 17.298156763549287, y: 17.59827012753881, z: 0.10151787289657402},  // Red
                     { x: -17.03050250551709, y: 16.04258871995021, z: -0.6035724405441485},  // Yellow
                     { x: -0.024321219262030, y: 15.91870264199188, z: 18.7967995615866},     // Blue
                     { x: -0.066898867944208, y: 17.59827012753881, z: -17.234319602002646}]; // Green
+
 function start3dService() {
-    initScene();        // To inicializate the project
+    initScene();  
+          // To inicializate the project
     createDashboard();
     animate();          // To represent frame by frame (Update)...
     window.addEventListener('resize', onWindowResize, false);
-
-    // createGLTF();
-    // createObjMtl(routeFolder,nameArchive,posx,posy,posz,scale,rotation)
-
-    //dados
-    // createObjMtl('./src/models/OBJMTL/Dice/','dice',-2,0,0, 1,0,0);
-    // createObjMtl('./src/models/OBJMTL/Dice/','dice',2,0,0, 1,0,1);
 
     createObjMtl('./src/models/OBJMTL/Griffin/','grifo',10,0,10, 2,7,2);
 
@@ -40,30 +35,47 @@ function start3dService() {
     createObjMtl('./src/models/OBJMTL/Unicornio/','unicornio',-10,0,10, 2.5,-7,5);
 
     createLight('DirectionalLight');
-    
+    // Oculta la escena
+    renderer.domElement.style.display = 'none';
+}
 
-    
-
-    initialiseTimer();
+function moveCameraToPlayer() {
+    if (jugador === 'red') {
+        camera.position.set(posPlayers[0].x, posPlayers[0].y, posPlayers[0].z);
+    } else if (jugador === 'yellow') {
+        camera.position.set(posPlayers[1].x, posPlayers[1].y, posPlayers[1].z);
+    } else if (jugador === 'blue') {
+        camera.position.set(posPlayers[2].x, posPlayers[2].y, posPlayers[2].z);
+    } else if (jugador === 'green') {
+        camera.position.set(posPlayers[3].x, posPlayers[3].y, posPlayers[3].z);
+    }
 }
 
 function initScene() {
     scene = new THREE.Scene();
-    scene.background=new THREE.Color(012075);
-    camera = new THREE.PerspectiveCamera( 75,   // FOV (Fild of view)
-                                        window.innerWidth / window.innerHeight, // ASPECT (Size of Screen)
-                                        0.1,  // NEAR (Cerca)
-                                        1000 ); //FAR (lejos)
+    scene.background = new THREE.Color(0x000); //0x043eaa
+    camera = new THREE.PerspectiveCamera(75,   // FOV (Fild of view)
+        window.innerWidth / window.innerHeight, // ASPECT (Size of Screen)
+        0.1,  // NEAR (Cerca)
+        1000); //FAR (lejos)
 
-    myCanvas = document.querySelector('.webgl'); 
-    renderer = new THREE.WebGLRenderer({canvas: myCanvas});
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    document.body.appendChild( renderer.domElement );
+    myCanvas = document.querySelector('.webgl');
+    renderer = new THREE.WebGLRenderer({ canvas: myCanvas });
+    renderer.setSize(window.innerWidth - 20, window.innerHeight - 50);//window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
 
-    scene.add(camera);
-    //make controls
+    // To make Controls
     controls = new THREE.OrbitControls(camera, renderer.domElement);
-    camera.position.set(10, 15, 10);
+
+    // if(jugador=='red')
+    //     camera.position.set(posPlayers[0].x,posPlayers[0].y,posPlayers[0].z);
+    // else if (jugador=='blue')
+    //     camera.position.set(posPlayers[2].x,posPlayers[2].y,posPlayers[2].z);
+    // else if (jugador=='yellow')
+    //     camera.position.set(posPlayers[1].x,posPlayers[1].y,posPlayers[1].z);
+    // else if (jugador=='green')
+    //     camera.position.set(posPlayers[3].x,posPlayers[3].y,posPlayers[3].z);
+
     controls.update();
 
     // Create Grid
@@ -215,12 +227,12 @@ function animate() {
     }
 }
 
-function onWindowResize(){
+function onWindowResize() {
 
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
-    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 function openForm() {
@@ -247,10 +259,25 @@ function playSounds(whatSound){
 }
 
 function go2Play() {
-    document.getElementById('blocker').style.display = 'none';
+    // Agrega el event listener para seleccionar un jugador
+    document.querySelector('#blocker').addEventListener('click', (e) => {
+        if (e.target.tagName === 'BUTTON') {
+            jugador = e.target.dataset.color;
+            // Oculta el bloqueador
+            document.getElementById('blocker').style.display = 'none';
+            // Muestra la escena
+            renderer.domElement.style.display = 'block';
+            // Mueve la cámara al jugador seleccionado
+            moveCameraToPlayer();
+            // Inicia el temporizador
+            initialiseTimer(1000);
+        }
+    });
     playSounds('hollow');
-    initialiseTimer();
-  }
+}
+
+
+
   
 function initialiseTimer() {
     var sec = 0;

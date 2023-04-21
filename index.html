@@ -38,14 +38,15 @@
         <div id="instructions">
             (MOUSE = Look around)
             <br>
-            <span onclick="go2Play()"style="font-size:40px">Click to Play</span>  
+            <span onclick="go2Play()" style="font-size:40px">Click to Play</span>  
             <br>
-            <button type="button" class="btn btn-primary"></button> &nbsp;
-            <button type="button" class="btn btn-success"></button> &nbsp;
-            <button type="button" class="btn btn-danger"></button> &nbsp;
-            <button type="button" class="btn btn-warning"></button> &nbsp;
+                <button onclick="go2Play()" type="button" class="btn btn-primary" id="blue" data-color="blue"></button>
+                <button onclick="go2Play()" type="button" class="btn btn-success" id="green" data-color="green"></button>
+                <button onclick="go2Play()" type="button" class="btn btn-danger" id="red" data-color="red"></button>
+                <button onclick="go2Play()" type="button" class="btn btn-warning" id="yellow" data-color="yellow"></button>
         </div>
     </div>
+    
     <div id="lost" style="display: none;">
         <div id="instructions">
             <span onclick="go2Play()"style="font-size:40px">Click to Play</span>  
