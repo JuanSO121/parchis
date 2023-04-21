@@ -28,16 +28,16 @@ function start3dService() {
     // createObjMtl(routeFolder,nameArchive,posx,posy,posz,scale,rotation)
 
     //dados
-    createObjMtl('./src/models/OBJMTL/Dice/','dice',-2,0,0, 1,0);
-    createObjMtl('./src/models/OBJMTL/Dice/','dice',2,0,0, 1,0);
+    // createObjMtl('./src/models/OBJMTL/Dice/','dice',-2,0,0, 1,0,0);
+    // createObjMtl('./src/models/OBJMTL/Dice/','dice',2,0,0, 1,0,1);
 
-    createObjMtl('./src/models/OBJMTL/Griffin/','grifo',10,0,10, 2,7);
+    createObjMtl('./src/models/OBJMTL/Griffin/','grifo',10,0,10, 2,7,2);
 
-    createObjMtl('./src/models/OBJMTL/Elfa/','elfa',-10,0,-10,4.2,7);
+    createObjMtl('./src/models/OBJMTL/Elfa/','elfa',-10,0,-10,4.2,7,3);
 
-    createObjMtl('./src/models/OBJMTL/Fenix/','fenix',10,0,-10, 2.5,5);
+    createObjMtl('./src/models/OBJMTL/Fenix/','fenix',10,0,-10, 2.5,5,4);
 
-    createObjMtl('./src/models/OBJMTL/Unicornio/','unicornio',-10,0,10, 2.5,-7);
+    createObjMtl('./src/models/OBJMTL/Unicornio/','unicornio',-10,0,10, 2.5,-7,5);
 
     createLight('DirectionalLight');
     
@@ -95,7 +95,7 @@ function createDashboard(){
  scene.add( plane );
 }
 
-function createObjMtl(routeFolder, nameArchive, posx, posy, posz, scale,rotation){
+function createObjMtl(routeFolder, nameArchive, posx, posy, posz, scale,rotation,number){
     const loader = new THREE.OBJLoader();
     const mtlLoader = new THREE.MTLLoader();
 
@@ -108,10 +108,11 @@ function createObjMtl(routeFolder, nameArchive, posx, posy, posz, scale,rotation
         loader.setMaterials(materials);
         loader.setPath(routeFolder);
         loader.load(nameArchive+'.obj', function (object) {
-              scene.add(object);
-              object.scale.set(scale,scale,scale);
-              object.position.set(posx,posy,posz);
-              object.rotation.y=rotation;
+            dados[number] = object;
+            scene.add(object);
+            object.scale.set(scale,scale,scale);
+            object.position.set(posx,posy,posz);
+            object.rotation.y=rotation;
         });
     }); 
 }
@@ -247,7 +248,6 @@ function playSounds(whatSound){
 
 function go2Play() {
     document.getElementById('blocker').style.display = 'none';
-    // document.getElementById('cointainerOthers').style.display = 'block';
     playSounds('hollow');
     initialiseTimer();
   }
@@ -262,8 +262,12 @@ function initialiseTimer() {
     }, 1000);
   }
 
+  
 var SPEED = 0.03;
 function throwDices(caseMovement) {
+    createObjMtl('./src/models/OBJMTL/Dice/','dice',-2,2.8,0, 1,0,0);
+    createObjMtl('./src/models/OBJMTL/Dice/','dice',2,2.8,0, 1,0,1);
+
     switch (caseMovement) {
         case 'rotate':
             rotate = true;

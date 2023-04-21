@@ -11,6 +11,7 @@
     <!-- etiqueta fav-icon -->
     <link rel="stylesheet" href="./src/css/main.css">
     <link rel="stylesheet" href="./src/css/dices.css">
+    <link rel="stylesheet" href="./src/css/mainStyle.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="./src/libs/three.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -28,9 +29,30 @@
     
 </head>
 <body onload="start3dService()">
+
     <audio id="myBackgroundSound">
         <source src="./src/sounds/Hallownest.mp3" type="audio/mpeg">
     </audio>
+
+    <div id="blocker">
+        <div id="instructions">
+            (MOUSE = Look around)
+            <br>
+            <span onclick="go2Play()"style="font-size:40px">Click to Play</span>  
+            <br>
+            <button type="button" class="btn btn-primary"></button> &nbsp;
+            <button type="button" class="btn btn-success"></button> &nbsp;
+            <button type="button" class="btn btn-danger"></button> &nbsp;
+            <button type="button" class="btn btn-warning"></button> &nbsp;
+        </div>
+    </div>
+    <div id="lost" style="display: none;">
+        <div id="instructions">
+            <span onclick="go2Play()"style="font-size:40px">Click to Play</span>  
+            <br/>          
+            You Lost
+        </div>
+    </div>
     
     <canvas width="800" height="600" class="webgl"></canvas>
     <nav class="navbar bg-light">
@@ -64,12 +86,15 @@
         </div>
     </nav>
 
+    <div class="dicesBottom"> </div>
+
     <div class="dicesBottom">
-        <figure onclick="throwDices()">
+        <figure onclick="throwDices('rotate'); ">
             <img class="build" src="./src/img/Dados.png" alt="Tirar Dados">
         </figure>
-    </div>
 
+    
+    </div>
     <!-- JS bootstrap-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"

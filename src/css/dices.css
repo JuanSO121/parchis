@@ -8,19 +8,19 @@
     margin: 20px;
 
     border-style: solid;
-    /* padding: 10px;
-    background-color: darkorange; */
+    /* padding: 10px;*/
+    background-color: gray;
     border-radius: 50%;
     width: 150px;
     height: 150px;
 }
 
-/* .swing { */
+.swing {
     /* animation: swing ease-in-out 1s infinite alternate; */
     /* transform-origin: center -20px; */
     /* float:left; */
     /* box-shadow: 5px 5px 10px rgba(0,0,0,0.5); */
-/* } */
+}
 
 .build{
     height: 83px;
